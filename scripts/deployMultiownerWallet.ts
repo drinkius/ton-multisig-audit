@@ -9,8 +9,14 @@ export async function run(provider: NetworkProvider) {
 
     const multiownerWallet = provider.open(Multisig.createFromConfig({
         threshold: 2,
-        signers: [Address.parse('UQBONmT67oFPvbbByzbXK6xS0V4YbBHs1mT-Gz8afP2AHdyt'), Address.parse('0QAR0lJjOVUzyT4QBKg50k216RBqvpvEPlq2_xGtdMkgFgcY'), Address.parse('UQAGkOdcs7i0OomLkySkVdiLbzriH4ptQAgYWqHRVK2vXO4z')],
-        proposers: [Address.parse('0QAR0lJjOVUzyT4QBKg50k216RBqvpvEPlq2_xGtdMkgFgcY')],
+        signers: [
+            Address.parse('0QBxpznvBmM4dvno5Fp2VBuzE8Cn1y4JIF_8UUSQTu9GCUdK'), 
+            Address.parse('0QArwTt1FGxQDrWDm7LPga76_9JRvXe1m5QsmVqhAvNby6YE'), 
+            Address.parse('UQA1aCDHZRWP0UGA6PtJYd9ygQR7F32rsDcUt5yyXESZEfq8')
+        ],
+        proposers: [
+            Address.parse('0QDdetVF40efFJLqYY6JlgFOZHjXcFIFLzNid-k6QxSmYg87')
+        ],
         allowArbitrarySeqno: true
     }, multisig_code));
 
