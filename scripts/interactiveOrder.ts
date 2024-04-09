@@ -24,7 +24,9 @@ export async function run(provider: NetworkProvider) {
             proposers
         } = await checkMultisig(multisigAddress, multisigCode, provider, ui, isTestnet, false);
 
+        // @ts-ignore: Object is possibly 'null'.
         const myProposerIndex = proposers.findIndex(address => address.equals(provider.sender().address!));
+        // @ts-ignore: Object is possibly 'null'.
         const mySignerIndex = signers.findIndex(address => address.equals(provider.sender().address!));
 
         if (myProposerIndex === -1 && mySignerIndex === -1) {

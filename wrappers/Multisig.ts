@@ -1,4 +1,19 @@
-import { Address, beginCell,  Cell, Dictionary, MessageRelaxed, storeMessageRelaxed, Contract, contractAddress, ContractProvider, Sender, SendMode, internal, toNano } from '@ton/core';
+import {
+    Address,
+    beginCell,
+    Cell,
+    Dictionary,
+    MessageRelaxed,
+    storeMessageRelaxed,
+    Contract,
+    contractAddress,
+    ContractProvider,
+    Sender,
+    SendMode,
+    internal,
+    toNano,
+    Slice
+} from '@ton/core';
 import { Op, Params } from "./Constants";
 
 export type Module = {
@@ -39,7 +54,7 @@ function moduleArrayToCell(arr: Array<Module>) {
     return dict;
 }
 
-function cellToArray(addrDict: Cell | null) : Array<Address>  {
+export function cellToArray(addrDict: Cell | null) : Array<Address>  {
     let resArr: Array<Address> = [];
     if(addrDict !== null) {
         const dict = Dictionary.loadDirect(Dictionary.Keys.Uint(8), Dictionary.Values.Address(), addrDict);
@@ -58,6 +73,31 @@ export function multisigConfigToCell(config: MultisigConfig): Cell {
                 .storeDict(arrayToCell(config.proposers))
                 .storeBit(config.allowArbitrarySeqno)
            .endCell();
+}
+
+export function endParse(slice: Slice) {
+    if (slice.remainingBits > 0 || slice.remainingRefs > 0) {
+        throw new Error('remaining bits in data');
+    }
+}
+
+export function parseMultisigData(data: Cell) {
+    const slice = data.beginParse();
+    const nextOderSeqno = slice.loadUintBig(256);
+    const threshold = slice.loadUint(8);
+    const signers = cellToArray(slice.loadRef());
+    const signersCount = slice.loadUint(8);
+    const proposers = cellToArray(slice.loadMaybeRef());
+    const allowArbitraryOrderSeqno = slice.loadBit();
+    endParse(slice);
+    return {
+        nextOderSeqno,
+        threshold,
+        signers,
+        signersCount,
+        proposers,
+        allowArbitraryOrderSeqno
+    };
 }
 
 export class Multisig implements Contract {
@@ -245,6 +285,16 @@ export class Multisig implements Contract {
             body: Multisig.newOrderMessage(newActions, expirationDate, isSigner, addrIdx, seqno)
         });
         //console.log(await provider.get("get_order_address", []));
+    }
+    async sendNewOrderStrict(provider: ContractProvider, via: Sender,
+           actions: Cell,
+           expirationDate: number, value: bigint, addrIdx: number, isSigner: boolean, seqno: bigint) {
+
+        await provider.internal(via, {
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            value,
+            body: Multisig.newOrderMessage(actions, expirationDate, isSigner, addrIdx, seqno)
+        });
     }
 
     async getOrderAddress(provider: ContractProvider, orderSeqno: bigint) {
