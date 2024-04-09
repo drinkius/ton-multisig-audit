@@ -3,6 +3,7 @@ import {Multisig} from '../wrappers/Multisig';
 import {compile, NetworkProvider} from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider) {
+    /*
     const multisig_code = await compile('Multisig');
 
     // deploy multisig
@@ -22,5 +23,5 @@ export async function run(provider: NetworkProvider) {
 
     await multiownerWallet.sendDeploy(provider.sender(), toNano('0.05'));
     await provider.waitForDeploy(multiownerWallet.address);
-
+    */
 }

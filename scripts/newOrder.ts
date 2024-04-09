@@ -3,11 +3,11 @@ import {Multisig} from '../wrappers/Multisig';
 import {compile, NetworkProvider} from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider) {
+    /*
     const multisig_code = await compile('Multisig');
 
     // deploy multisig
 
-    // /*
     const multiownerWallet = provider.open(Multisig.createFromConfig({
         threshold: 2,
         signers: [
@@ -20,7 +20,6 @@ export async function run(provider: NetworkProvider) {
         ],
         allowArbitrarySeqno: true
     }, multisig_code));
-    // */
 
     // Connect
 
@@ -71,5 +70,5 @@ export async function run(provider: NetworkProvider) {
         false, // not signer
         123n // order_seqno
     );
-
+    */
 }
