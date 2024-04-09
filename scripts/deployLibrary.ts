@@ -9,5 +9,5 @@ export async function run(provider: NetworkProvider) {
 
     const librarian_code = await compile('Librarian');
     const librarian = provider.open(Librarian.createFromConfig({code: order_code_raw}, librarian_code));
-    await librarian.sendDeploy(provider.sender(), toNano("10"));
+    await librarian.sendDeploy(provider.sender(), toNano("1"));
 }
